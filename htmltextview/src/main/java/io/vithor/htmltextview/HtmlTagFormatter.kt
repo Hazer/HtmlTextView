@@ -23,35 +23,39 @@ class HtmlTagFormatter {
     @Throws(NumberFormatException::class)
     fun handlerHtmlContent(context: Context, htmlContent: String): Spanned {
         return HtmlParser.buildSpannedText(htmlContent) { opening, tag, output, attributes ->
-            when (tag) {
-                Tag.SPAN.name, Tag.P.name -> if (opening) {
-                    mTagStartIndex.put(tag, output.length)
+            when (tag.toLowerCase()) {
+                Tag.SPAN.tagName, Tag.P.tagName -> {
+                    if (opening) {
+                        mTagStartIndex.put(tag, output.length)
 
-                    var styleContent = HtmlParser.getValue(attributes, Attribute.STYLE.name)
-                    styleContent = handleAlignAttribute(attributes, styleContent)
-                    styleContent = handleColorAttribute(attributes, styleContent)
+                        var styleContent = HtmlParser.getValue(attributes, Attribute.STYLE.attrName)
+                        styleContent = handleAlignAttribute(attributes, styleContent)
+                        styleContent = handleColorAttribute(attributes, styleContent)
 
-                    mTagStyle.put(tag, styleContent)
-                } else {
-                    handleStyleAttribute(output, tag, context)
-                    mTagStyle.put(tag, "")
+                        mTagStyle.put(tag, styleContent)
+                    } else {
+                        handleStyleAttribute(output, tag, context)
+                        mTagStyle.put(tag, "")
+                    }
                 }
-                Tag.A.name -> if (opening) {
-                    mTagStartIndex.put(tag, output.length)
+                Tag.A.tagName -> {
+                    if (opening) {
+                        mTagStartIndex.put(tag, output.length)
 
-                    var styleContent = HtmlParser.getValue(attributes, Attribute.STYLE.name)
-                    styleContent = handleAlignAttribute(attributes, styleContent)
-                    styleContent = handleColorAttribute(attributes, styleContent)
+                        var styleContent = HtmlParser.getValue(attributes, Attribute.STYLE.attrName)
+                        styleContent = handleAlignAttribute(attributes, styleContent)
+                        styleContent = handleColorAttribute(attributes, styleContent)
 
-                    hrefValue = HtmlParser.getValue(attributes, Attribute.HREF.name)
+                        hrefValue = HtmlParser.getValue(attributes, Attribute.HREF.attrName)
 
-                    mTagStyle.put(tag, styleContent)
-                } else {
-                    handleHrefAttribute(output, tag, hrefValue!!)
-                    handleStyleAttribute(output, tag, context)
-                    mTagStyle.put(tag, "")
+                        mTagStyle.put(tag, styleContent)
+                    } else {
+                        handleHrefAttribute(output, tag, hrefValue!!)
+                        handleStyleAttribute(output, tag, context)
+                        mTagStyle.put(tag, "")
+                    }
                 }
-                Tag.UL.name, Tag.OL.name, Tag.DD.name -> {
+                Tag.UL.tagName, Tag.OL.tagName, Tag.DD.tagName -> {
                     if (opening) {
                         mListParents.add(tag)
                     } else
@@ -59,8 +63,10 @@ class HtmlTagFormatter {
 
                     mListItemCount = 0
                 }
-                Tag.LI.name -> if (!opening) {
-                    handleListTag(output)
+                Tag.LI.tagName -> {
+                    if (!opening) {
+                        handleListTag(output)
+                    }
                 }
             }
             false
@@ -76,13 +82,11 @@ class HtmlTagFormatter {
     }
 
     private fun handleColorAttribute(attributes: Attributes?, styleContent: String?): String? {
-        return handleAttribute(Attribute.COLOR.name, Style.FontColor.name,
-                attributes, styleContent)
+        return handleAttribute(Attribute.COLOR.attrName, Style.FontColor.styleName, attributes, styleContent)
     }
 
     private fun handleAlignAttribute(attributes: Attributes?, styleContent: String?): String? {
-        return handleAttribute(Attribute.ALIGN.name, Style.TextAlign.name,
-                attributes, styleContent)
+        return handleAttribute(Attribute.ALIGN.attrName, Style.TextAlign.styleName, attributes, styleContent)
     }
 
     private fun handleAttribute(name: String, styleName: String, attributes: Attributes?, styleContent: String?): String? {
@@ -130,6 +134,7 @@ class HtmlTagFormatter {
             "left" -> AlignmentSpan.Standard(Layout.Alignment.ALIGN_NORMAL)
             else -> AlignmentSpan.Standard(Layout.Alignment.ALIGN_NORMAL)
         }
+
         output.setSpan(alinspan, startIndex!!, stopIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
 
@@ -143,20 +148,20 @@ class HtmlTagFormatter {
 
                 val (styleName: String?, value: String?) = pair
 
-                when (styleName) {
-                    Style.FontSize.name -> {
+                when (styleName.toLowerCase()) {
+                    Style.FontSize.styleName -> {
                         val size = Integer.valueOf(getAllNumbers(value))!!
                         Log.i("tag", "$size")
                         output.setSpan(AbsoluteSizeSpan(sp2px(context, size.toFloat())), startIndex, stopIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                     }
-                    Style.BackgroundColor.name -> {
+                    Style.BackgroundColor.styleName -> {
                         output.setSpan(BackgroundColorSpan(Color.parseColor(value)), startIndex, stopIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                     }
-                    Style.FontColor.name -> {
+                    Style.FontColor.styleName -> {
                         val str = output.toString()
                         output.setSpan(ForegroundColorSpan(Color.parseColor(value)), startIndex, stopIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                     }
-                    Style.TextAlign.name -> {
+                    Style.TextAlign.styleName -> {
                         handleAlignStyle(output, tag, value)
                     }
                 }
@@ -164,7 +169,7 @@ class HtmlTagFormatter {
         }
     }
 
-    enum class Tag(name: String) {
+    enum class Tag(val tagName: String) {
         A("a"),
         P("p"),
         UL("ul"),
@@ -174,14 +179,14 @@ class HtmlTagFormatter {
         SPAN("span")
     }
 
-    enum class Attribute(name: String) {
+    enum class Attribute(val attrName: String) {
         HREF("href"),
         STYLE("style"),
         ALIGN("align"),
         COLOR("color"),
     }
 
-    enum class Style(name: String) {
+    enum class Style(val styleName: String) {
         TextAlign("text-align"),
         FontColor("color"),
         BackgroundColor("background-color"),

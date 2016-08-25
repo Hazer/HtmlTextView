@@ -1,6 +1,5 @@
 package io.vithor.htmltextview;
 
-import android.os.Build;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Spanned;
