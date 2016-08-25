@@ -25,12 +25,12 @@ public class HtmlParser implements Html.TagHandler, ContentHandler {
     }
 
     public static Spanned buildSpannedText(String html, TagHandler handler) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY, null, new HtmlParser(handler));
-        } else {
-            //noinspection deprecation
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//            return Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY, null, new HtmlParser(handler));
+//        } else {
+//            //noinspection deprecation
             return Html.fromHtml(html, null, new HtmlParser(handler));
-        }
+//        }
     }
 
     public static String getValue(Attributes attributes, String name) {

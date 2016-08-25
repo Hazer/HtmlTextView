@@ -51,12 +51,12 @@ public class HtmlTextView extends TextView {
         } catch (Exception ex) {
             Log.d("HtmlTextView", "Failed to parse HTML", ex);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                setText(Html.fromHtml(text.toString(), Html.FROM_HTML_MODE_LEGACY));
-            } else {
-                //noinspection deprecation
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                setText(Html.fromHtml(text.toString(), Html.FROM_HTML_MODE_LEGACY));
+//            } else {
+//                //noinspection deprecation
                 setText(Html.fromHtml(text.toString()));
-            }
+//            }
         }
     }
 }
