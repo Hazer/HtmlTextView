@@ -124,7 +124,7 @@ class HtmlTagFormatter {
         }
     }
 
-    private fun handleAlignStyle(output: Editable, parentTag: String, alignTag: String) {
+    private fun handleAlignStyle(output: Editable, parentTag: String, alignTag: String?) {
         val startIndex = mTagStartIndex[parentTag]
         val stopIndex = output.length
 
@@ -146,9 +146,14 @@ class HtmlTagFormatter {
         if (!styleContent.isNullOrBlank()) {
             styleContent!!.split(';').map { styles -> styles.split(':') }.forEach { pair ->
 
-                val (styleName: String?, value: String?) = pair
+                if (pair.size < 2) {
+                    return@forEach
+                }
 
-                when (styleName.toLowerCase()) {
+                val styleName: String? = pair[0].trim().toLowerCase()
+                val value: String? = pair[1].trim().toLowerCase()
+
+                when (styleName) {
                     Style.FontSize.styleName -> {
                         val size = Integer.valueOf(getAllNumbers(value))!!
                         Log.i("tag", "$size")
@@ -194,7 +199,9 @@ class HtmlTagFormatter {
     }
 
     companion object {
-        private fun getAllNumbers(body: String): String {
+        private fun getAllNumbers(body: String?): String {
+            if (body == null) return ""
+
             val pattern = Pattern.compile("\\d+")
             val matcher = pattern.matcher(body)
             while (matcher.find()) {

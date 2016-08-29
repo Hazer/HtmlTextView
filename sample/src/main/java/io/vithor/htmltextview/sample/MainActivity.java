@@ -52,18 +52,20 @@ public class MainActivity extends Activity {
 //                "<p><a href=\"http://vithor.io\">clickable link</a></p>\n";
 
         // TODO: FIX <b>Bold</b> without <p> </p> crash
-        String text =
-                "<b>Bold</b>\n" +
-//                                "\n" +
-                "<i>Italic</i>\n" +
-//                                "\n" +
-//                "<bi color='#CCFF00'>Bold & Italic</bi>\n" //+
-//                "<p align='justify'>alignment</p>\n" +
-//                "<p align='center'>alignment center</p>\n" //+
-//                "<p align='right'>alignment right</p>\n" //+
-                "<p style=\"text-align:right;color:#FF0000\">align right style + color</p>\n" //+
-//                "<p style=\"text-align:right\">align right using style</p>\n"
-                ;
+//        String text =
+//                "<b>Bold</b>\n" +
+////                                "\n" +
+//                "<i>Italic</i>\n" +
+////                                "\n" +
+////                "<bi color='#CCFF00'>Bold & Italic</bi>\n" //+
+////                "<p align='justify'>alignment</p>\n" +
+////                "<p align='center'>alignment center</p>\n" //+
+////                "<p align='right'>alignment right</p>\n" //+
+//                "<p style=\"text-align:right;color:#FF0000\">align right style + color</p>\n" //+
+////                "<p style=\"text-align:right\">align right using style</p>\n"
+//                ;
+
+        String text = "<p style=\"text-align: right;\"><s>test</s></p>";
         htmlTextView.setHtmlText(text);
     }
 }
