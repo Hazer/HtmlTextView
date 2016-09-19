@@ -129,15 +129,17 @@ public class HtmlTagFormatter {
         val startIndex = mTagStartIndex[parentTag]
         val stopIndex = output.length
 
-        val alinspan: AlignmentSpan = when (alignTag) {
+        val alinspan: AlignmentSpan? = when (alignTag) {
             "center" -> AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER)
             "right" -> AlignmentSpan.Standard(Layout.Alignment.ALIGN_OPPOSITE)
             "left" -> AlignmentSpan.Standard(Layout.Alignment.ALIGN_NORMAL)
-            "justified", "justify" -> JustifiedSpan()
+            "justified", "justify" -> null
             else -> AlignmentSpan.Standard(Layout.Alignment.ALIGN_NORMAL)
         }
 
-        output.setSpan(alinspan, startIndex!!, stopIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        if (alinspan != null) {
+            output.setSpan(alinspan, startIndex!!, stopIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
     }
 
     private fun handleStyleAttribute(output: Editable, tag: String, context: Context) {
