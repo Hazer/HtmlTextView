@@ -7,11 +7,12 @@ import android.text.Layout
 import android.text.Spanned
 import android.text.style.*
 import android.util.Log
+import com.bluejamesbond.text.style.JustifiedSpan
 import org.xml.sax.Attributes
 import java.util.*
 import java.util.regex.Pattern
 
-class HtmlTagFormatter {
+public class HtmlTagFormatter {
     private val mListParents = mutableListOf<String>()
     private var mListItemCount = 0
 
@@ -132,6 +133,7 @@ class HtmlTagFormatter {
             "center" -> AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER)
             "right" -> AlignmentSpan.Standard(Layout.Alignment.ALIGN_OPPOSITE)
             "left" -> AlignmentSpan.Standard(Layout.Alignment.ALIGN_NORMAL)
+            "justified", "justify" -> JustifiedSpan()
             else -> AlignmentSpan.Standard(Layout.Alignment.ALIGN_NORMAL)
         }
 

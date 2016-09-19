@@ -65,7 +65,7 @@ public class MainActivity extends Activity {
 ////                "<p style=\"text-align:right\">align right using style</p>\n"
 //                ;
 
-        String text = "<p style=\"text-align: right;\"><s>test</s></p>";
+        String text = " <p style=\"text-align:right;\">test</p>";
         htmlTextView.setHtmlText(text);
     }
 }
